@@ -324,6 +324,76 @@
 
 	<article>
 	
+		<h1><a href="/2022/05/22/Spark-HA-Yarn配置/">Spark HA &amp; Yarn配置</a></h1>
+	
+	<div class="article__infos">
+		<span class="article__date">2022-05-22</span><br />
+		
+		
+			<span class="article__tags">
+			  	<a class="article__tag-none-link" href="/notrip/Lil_Tecca.github.io.git/tags/Spark-HA-Yarn%E9%85%8D%E7%BD%AE/" rel="tag">Spark HA & Yarn配置</a>
+			</span>
+		
+	</div>
+
+	
+
+	
+		<h5 id="博主的本地环境为：Macbok-pro-macOS-Monterey-12-3-1"><a href="#博主的本地环境为：Macbok-pro-macOS-Monterey-12-3-1" class="headerlink" title="博主的本地环境为：Macbok pro , macOS Monterey 12.3.1"></a><em>博主的本地环境为：Macbok pro , macOS Monterey 12.3.1</em></h5><hr>
+<h3 id="一、Spark-Standalone-HA模式"><a href="#一、Spark-Standalone-HA模式" class="headerlink" title="一、Spark-Standalone-HA模式"></a>一、Spark-Standalone-HA模式</h3><p><em><strong>Standalone集群是Master-Slaves架构的集群模式，和大部分的Master-Slaves结构集群一样，存在着Master单点故障的问题。 如何解决这个单点故障的问题，Spark提供了两种方案：1.基于文件系统的单点恢复(Single-Node Recovery with Local File System)–只能用于开发或测试环境。2.基于zookeeper的Standby Masters(Standby Masters with ZooKeeper)–可以用于生产环境。</strong></em></p>
+<p>⚠️：主机中的zookeeper的版本需要喝spark版本兼容，否则会出现错误。若不兼容则重新下载与之兼容的zookeeper，并删除之前的软连接，再重新配置，最后分配给node2 node3即可。</p>
+<h4 id="1-配置修改-spark-env-sh-文件内容"><a href="#1-配置修改-spark-env-sh-文件内容" class="headerlink" title="1.配置修改 spark-env.sh 文件内容"></a>1.配置修改 spark-env.sh 文件内容</h4><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">cd /export/server/spark/conf </span><br><span class="line"></span><br><span class="line">vim spark-env.sh</span><br><span class="line"><span class="meta prompt_"></span></span><br><span class="line"><span class="meta prompt_">#</span><span class="language-bash"><span class="comment">#为 83 行内容加上注释</span></span></span><br><span class="line">82 # 告知Spark的master运行在哪个机器上</span><br><span class="line">83 # export SPARK_MASTER_HOST=master</span><br><span class="line"><span class="meta prompt_"></span></span><br><span class="line"><span class="meta prompt_">#</span><span class="language-bash"><span class="comment">#文末填写以下内容</span></span></span><br><span class="line">105 SPARK_DAEMON_JAVA_OPTS=&quot;-Dspark.deploy.recoveryMode=ZOOKEEPER -Dspark.deploy    .zookeeper.url=node1:2181,node2:2181,node3:2181 -Dspark.deploy.zookeeper.dir    =/spark-ha&quot;</span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">spark.deploy.recoveryMode 指定HA模式 基于Zookeeper实现</span></span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">指定Zookeeper的连接地址</span></span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">指定在Zookeeper中注册临时节点的路径</span></span><br></pre></td></tr></table></figure>
+
+<h4 id="2-将spark-env-sh传输到node2-node3上"><a href="#2-将spark-env-sh传输到node2-node3上" class="headerlink" title="2.将spark-env.sh传输到node2 node3上"></a>2.将spark-env.sh传输到node2 node3上</h4><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">scp spark-env.sh node2:/export/server/spark/conf/</span><br><span class="line"></span><br><span class="line">scp spark-env.sh node3:/export/server/spark/conf/</span><br></pre></td></tr></table></figure>
+
+<h4 id="3-启动集群"><a href="#3-启动集群" class="headerlink" title="3.启动集群"></a>3.启动集群</h4><p>⚠️：在启动集群前需确保相关zookeeper和Hadoop均已启动</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta prompt_">#</span><span class="language-bash"><span class="comment">#首先在node1上启动master 和所有主机上的worker</span></span></span><br><span class="line">cd /export/server/spark/sbin</span><br><span class="line">./start-all.sh</span><br><span class="line"><span class="meta prompt_"></span></span><br><span class="line"><span class="meta prompt_">#</span><span class="language-bash"><span class="comment">#再到node2上启动 node2上的master作为备用master</span></span></span><br><span class="line">cd /export/server/spark/sbin</span><br><span class="line">./start-master.sh</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line">(base) [root@node1 sbin]# jps</span><br><span class="line">7393 HistoryServer</span><br><span class="line">6034 NameNode</span><br><span class="line">7012 NodeManager</span><br><span class="line">9749 Worker</span><br><span class="line">9639 Master</span><br><span class="line">2603 DataNode</span><br><span class="line">6699 ResourceManager</span><br><span class="line">9805 Jps</span><br><span class="line">4911 QuorumPeerMain</span><br><span class="line"></span><br><span class="line">(base) [root@node2 sbin]# jps</span><br><span class="line">2736 QuorumPeerMain</span><br><span class="line">4130 Jps</span><br><span class="line">4071 Master</span><br><span class="line">3480 NodeManager</span><br><span class="line">3386 SecondaryNameNode</span><br><span class="line">3263 DataNode</span><br><span class="line">3711 Worker</span><br></pre></td></tr></table></figure>
+
+<h4 id="4-访问WebUI"><a href="#4-访问WebUI" class="headerlink" title="4.访问WebUI"></a>4.访问WebUI</h4><p>![markdown](/Users/mojiyang/Desktop/bin/截图库/11.18/截屏2022-05-28 上午1.38.42.png)</p>
+<p>![markdown](/Users/mojiyang/Desktop/bin/截图库/11.18/截屏2022-05-28 上午1.40.58.png)</p>
+<h4 id="5-为验证功能，我们kill掉node1中master的进程号，来模拟node1作为我们正进行操作的主机突然宕机"><a href="#5-为验证功能，我们kill掉node1中master的进程号，来模拟node1作为我们正进行操作的主机突然宕机" class="headerlink" title="5.为验证功能，我们kill掉node1中master的进程号，来模拟node1作为我们正进行操作的主机突然宕机"></a>5.为验证功能，我们kill掉node1中master的进程号，来模拟node1作为我们正进行操作的主机突然宕机</h4><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">(base) [root@node1 ~]# kill -9 9639</span><br><span class="line">(base) [root@node1 ~]# jps</span><br><span class="line">7393 HistoryServer</span><br><span class="line">6034 NameNode</span><br><span class="line">7012 NodeManager</span><br><span class="line">9940 Jps</span><br><span class="line">9749 Worker</span><br><span class="line">2603 DataNode</span><br><span class="line">6699 ResourceManager</span><br><span class="line">4911 QuorumPeerMain</span><br></pre></td></tr></table></figure>
+
+<h4 id="6-此刻我们访问备用master（node2）的WebUI"><a href="#6-此刻我们访问备用master（node2）的WebUI" class="headerlink" title="6.此刻我们访问备用master（node2）的WebUI"></a>6.此刻我们访问备用master（node2）的WebUI</h4><p>![markdown](/Users/mojiyang/Desktop/bin/截图库/11.18/截屏2022-05-28 上午1.47.23.png)</p>
+<blockquote>
+<p>由此可得出结论</p>
+<blockquote>
+<p>在Spark-Standalone-HA模式下，主备切换不会出现任何错误，在其中的一个master宕机后，也会有备用的master继续工作。</p>
+</blockquote>
+</blockquote>
+<hr>
+<h3 id="二、Spark-On-YARN模式"><a href="#二、Spark-On-YARN模式" class="headerlink" title="二、Spark On YARN模式"></a>二、Spark On YARN模式</h3><p>*** spark on yarn架构有两种模式，分为Yarn-client模式和Yarn-cluster模式***</p>
+<h4 id="1-配置spark-env-sh"><a href="#1-配置spark-env-sh" class="headerlink" title="1. 配置spark-env.sh"></a>1. 配置spark-env.sh</h4><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta prompt_">#</span><span class="language-bash"><span class="comment">#添加</span></span></span><br><span class="line"><span class="meta prompt_"></span></span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">HADOOP软件配置文件目录，读取HDFS上文件和运行YARN集群</span></span><br><span class="line">HADOOP_CONF_DIR=/export/server/hadoop/etc/hadoop</span><br><span class="line">YARN_CONF_DIR=/export/server/hadoop/etc/hadoop</span><br></pre></td></tr></table></figure>
+
+<h4 id="2-启动pyspark-–master-yarn-并测试"><a href="#2-启动pyspark-–master-yarn-并测试" class="headerlink" title="2.启动pyspark –master yarn,并测试"></a>2.启动pyspark –master yarn,并测试</h4><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line">cd /export/server/spark/bin</span><br><span class="line"></span><br><span class="line">Python 3.8.12 (default, Oct 12 2021, 13:49:34) </span><br><span class="line">[GCC 7.5.0] :: Anaconda, Inc. on linux</span><br><span class="line">Type &quot;help&quot;, &quot;copyright&quot;, &quot;credits&quot; or &quot;license&quot; for more information.</span><br><span class="line"></span><br><span class="line">22/05/28 02:06:36 WARN NativeCodeLoader: Unable to load native-hadoop library for your platform... using builtin-java classes where applicable</span><br><span class="line">22/05/28 02:06:39 WARN Client: Neither spark.yarn.jars nor spark.yarn.archive is set, falling back to uploading libraries under SPARK_HOME.</span><br><span class="line">Welcome to</span><br><span class="line">      ____              __</span><br><span class="line">     / __/__  ___ _____/ /__</span><br><span class="line">    _\ \/ _ \/ _ `/ __/  &#x27;_/</span><br><span class="line">   /__ / .__/\_,_/_/ /_/\_\   version 3.2.0</span><br><span class="line">      /_/</span><br><span class="line"></span><br><span class="line">Using Python version 3.8.12 (default, Oct 12 2021 13:49:34)</span><br><span class="line">Spark context Web UI available at http://node1:4040</span><br><span class="line">Spark context available as &#x27;sc&#x27; (master = yarn, app id = application_1653500749142_0001).</span><br><span class="line">SparkSession available as &#x27;spark&#x27;.</span><br><span class="line"><span class="meta prompt_">&gt;</span><span class="language-bash">&gt;&gt; sc.parallelize([1,2,3,4,5]).map(lambda x: x*10).collect()</span></span><br><span class="line">[10, 20, 30, 40, 50] </span><br></pre></td></tr></table></figure>
+
+<p>访问node1:8088查看：</p>
+<p>![markdown](/Users/mojiyang/Desktop/bin/截图库/11.18/截屏2022-05-28 上午2.14.02.png)</p>
+<h4 id="4-验证client模式"><a href="#4-验证client模式" class="headerlink" title="4.验证client模式"></a>4.验证client模式</h4><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">(base) [root@node1 ~]# /export/server/spark/bin/spark-submit --master yarn --deploy-mode client --driver-memory 512m --executor-memory 512m --num-executors 3 --total-executor-cores 3 /export/server/spark/examples/src/main/python/pi.py 3</span><br><span class="line"></span><br><span class="line">22/05/28 02:22:18 WARN NativeCodeLoader: Unable to load native-hadoop library for your platform... using builtin-java classes where applicable</span><br><span class="line">22/05/28 02:22:19 WARN Utils: Service &#x27;SparkUI&#x27; could not bind on port 4040. Attempting port 4041.</span><br><span class="line">22/05/28 02:22:20 WARN Client: Neither spark.yarn.jars nor spark.yarn.archive is set, falling back to uploading libraries under SPARK_HOME.</span><br><span class="line">Pi is roughly 3.146480</span><br></pre></td></tr></table></figure>
+
+<h4 id="5-验证cluster模式"><a href="#5-验证cluster模式" class="headerlink" title="5.验证cluster模式"></a>5.验证cluster模式</h4><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">(base) [root@node1 ~]# /export/server/spark/bin/spark-submit --master yarn --deploy-mode cluster --driver-memory 512m --executor-memory 512m --num-executors 3 --total-executor-cores 3 /export/server/spark/examples/src/main/python/pi.py 3</span><br><span class="line"></span><br><span class="line">22/05/28 02:24:00 WARN NativeCodeLoader: Unable to load native-hadoop library for your platform... using builtin-java classes where applicable</span><br><span class="line">22/05/28 02:24:01 WARN Client: Neither spark.yarn.jars nor spark.yarn.archive is set, falling back to uploading libraries under SPARK_HOME.</span><br><span class="line">You have new mail in /var/spool/mail/root</span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p>⚠️：为什么两者的输出一个有结果一个没有结果？</p>
+<blockquote>
+<p>是因为clint（客户端）模式和cluster模式是有区别的：</p>
+<p>client模式：Driver运行在Client上，应用程序运行结果会在客户端显示，所有适合运行结果有输出的应用程序（如spark-shell）</p>
+<p>cluster模式：Driver程序在YARN中运行，Driver所在的机器是随机的，应用的运行结果不能在客户端显示只能通过yarn查看，所以最好运行那些将结果最终保存在外部存储介质（如HDFS、Redis、Mysql）而非stdout输出的应用程序，客户端的终端显示的仅是作为YARN的job的简单运行状况。</p>
+</blockquote>
+</blockquote>
+
+	
+
+	
+
+</article>
+
+
+
+
+	<article>
+	
 		<h1><a href="/2022/05/15/hello-world/">Hello World</a></h1>
 	
 	<div class="article__infos">
