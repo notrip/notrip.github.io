@@ -1,0 +1,245 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+	<meta name="theme-color" content="#33474d">
+	<title>Spark基础环境配置 | Hexo</title>
+	<link rel="stylesheet" href="/css/style.css" />
+	
+      <link rel="alternate" href="/atom.xml" title="Hexo" type="application/atom+xml">
+    
+<meta name="generator" content="Hexo 5.4.2"></head>
+
+<body>
+
+	<header class="header">
+		<nav class="header__nav">
+			
+				<a href="/archives" class="header__link">Archive</a>
+			
+				<a href="/tags" class="header__link">Tags</a>
+			
+				<a href="/atom.xml" class="header__link">RSS</a>
+			
+		</nav>
+		<h1 class="header__title"><a href="/notrip/Lil_Tecca.github.io.git/">Hexo</a></h1>
+		<h2 class="header__subtitle"></h2>
+	</header>
+
+	<main>
+		<article>
+	
+		<h1>Spark基础环境配置</h1>
+	
+	<div class="article__infos">
+		<span class="article__date">2022-05-22</span><br />
+		
+		
+			<span class="article__tags">
+			  	<a class="article__tag-none-link" href="/notrip/Lil_Tecca.github.io.git/tags/Spark%E5%9F%BA%E7%A1%80%E7%8E%AF%E5%A2%83%E9%85%8D%E7%BD%AE/" rel="tag">Spark基础环境配置</a>
+			</span>
+		
+	</div>
+
+	
+
+	
+		<h5 id="博主的本地环境为：Macbok-pro-macOS-Monterey-12-3-1"><a href="#博主的本地环境为：Macbok-pro-macOS-Monterey-12-3-1" class="headerlink" title="博主的本地环境为：Macbok pro , macOS Monterey 12.3.1"></a><em>博主的本地环境为：Macbok pro , macOS Monterey 12.3.1</em></h5><ul>
+<li>Mac 用户注意需要注意，虚拟机使用VMware Fusion，镜像为CentOS7.</li>
+</ul>
+<hr>
+<h2 id="一、基础配置"><a href="#一、基础配置" class="headerlink" title="一、基础配置"></a>一、基础配置</h2><h4 id="1-配置网络适配"><a href="#1-配置网络适配" class="headerlink" title="1.配置网络适配"></a><strong>1.配置网络适配</strong></h4><p>Mac用户只需点击VMware Fusion &gt; 偏好设置 &gt; 网络，并点击左下角“ + ”即可添加虚拟机上所用的子网ip（例：192.168.138.0）。</p>
+<p><figure class="figure"><img src="/2022/05/22/Spark%E5%9F%BA%E7%A1%80%E7%8E%AF%E5%A2%83%E9%85%8D%E7%BD%AE/1.png" alt="1.png"><figcaption class="figure__caption">1.png</figcaption></figure></p>
+<p><em>注：Mac用户若省略此处步骤可能会导致时间的推移而导致ping不动网络（血的教训😭）</em></p>
+<ul>
+<li><p>分别修改三台虚拟机的主机名</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta prompt_"># </span><span class="language-bash">node1</span></span><br><span class="line">echo &quot;node1&quot; &gt;/etc/hostname</span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">node2</span></span><br><span class="line">echo &quot;node2&quot; &gt;/etc/hostname</span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">node3</span></span><br><span class="line">echo &quot;node3&quot; &gt;/etc/hostname</span><br></pre></td></tr></table></figure></li>
+<li><p>更该网络配置 （node1 node2 node3）</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line">vim /etc/sysconfig/network-scripts/ifcfg-ens33(node2,node3中的IPADDR只需在151上递加即可)</span><br><span class="line"></span><br><span class="line">TYPE=&quot;Ethernet&quot;</span><br><span class="line">PROXY_METHOD=&quot;none&quot;</span><br><span class="line">BROWSER_ONLY=&quot;no&quot;</span><br><span class="line">BOOTPROTO=&quot;static&quot;# 配置BOOTPROTO=static：表示静态路由协议，可以保持IP固定</span><br><span class="line">DEFROUTE=&quot;yes&quot;</span><br><span class="line">IPV4_FAILURE_FATAL=&quot;no&quot;</span><br><span class="line">IPV6INIT=&quot;yes&quot;</span><br><span class="line">IPV6_AUTOCONF=&quot;yes&quot;</span><br><span class="line">IPV6_DEFROUTE=&quot;yes&quot;</span><br><span class="line">IPV6_FAILURE_FATAL=&quot;no&quot;</span><br><span class="line">IPV6_ADDR_GEN_MODE=&quot;stable-privacy&quot;</span><br><span class="line">NAME=&quot;ens33&quot;</span><br><span class="line">UUID=&quot;7815751b-505d-4ae2-b2d4-aa39591dc6aa&quot;</span><br><span class="line">DEVICE=&quot;ens33&quot;</span><br><span class="line">ONBOOT=&quot;yes&quot;# 配置ONBOOT=yes:表示启动这块网卡</span><br><span class="line">IPADDR=&quot;192.168.138.151&quot;# 配置IPADDR:表示虚拟机的IP地址，这里设置的IP地址要与前面IP映射配置时的IP地址一致，否则无法通过主机名找到对应IP;</span><br><span class="line">PREFIX=&quot;24&quot;</span><br><span class="line">GATEWAY=&quot;192.168.138.2&quot;# 配置GATEWAY:表示虚拟机网关,通常都是将IP地址最后一个位数变为2;</span><br><span class="line">DNS1=&quot;192.168.138.2&quot;# 配置DNS1:表示域名解析器，此处采用Google提供的免费DNS服务器88.8.8(也可以设置为PC端电脑对应的DNS)。</span><br><span class="line">DOMAIN=&quot;114.114.114.114&quot;</span><br><span class="line">IPV6_PRIVACY=&quot;no&quot;</span><br></pre></td></tr></table></figure></li>
+<li><p>更改完成后对三台虚拟机进行重启</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">shutdown -r 0</span><br></pre></td></tr></table></figure></li>
+<li><p>重启成功后进行一次连通外网的测试</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ping baidu.com -c3</span><br></pre></td></tr></table></figure></li>
+</ul>
+<h4 id="2-修改host映射"><a href="#2-修改host映射" class="headerlink" title="2.修改host映射"></a>2.修改host映射</h4><p>修改/etc/hosts映射文件，为的是将来对相关联的虚拟机操作更加便捷，其中添加相互对应的IP地址和主机名。</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">vim /etc/hosts</span><br><span class="line"></span><br><span class="line">127.0.0.1   localhost localhost.localdomain localhost4 localhost4.localdomain4</span><br><span class="line">::1         localhost localhost.localdomain localhost6 localhost6.localdomain6</span><br><span class="line"></span><br><span class="line">192.168.138.151 node1 node1.itcast.cn</span><br><span class="line">192.168.138.152 node2 node2.itcast.cn</span><br><span class="line">192.168.138.153 node3 node3.itcast.cn                                 </span><br></pre></td></tr></table></figure>
+
+<p>新手须知：推出并保存的方式可为 ‘esc + x‘，’esc + shift+zz‘</p>
+<h4 id="3-集群的时间同步"><a href="#3-集群的时间同步" class="headerlink" title="3.集群的时间同步"></a>3.集群的时间同步</h4><p>我们有的时候在使用虚拟机时遇到数据误差的时候，总是不清楚哪里出错，原因就在可能没有进行时间同步。在整个集群当中，时间同步充当十分重要的角色。不要存在侥幸心理，如若因为时间不同步造成了损失，即使是进行了数据备份，那么你可能无法在正确的时间将正确的数据进行备份。</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ntpdate ntp5.aliyun.com</span><br></pre></td></tr></table></figure>
+
+<p>建议：在每次执行poweroff之后的再启动后执行。</p>
+<h4 id="4-SSH免密钥登陆"><a href="#4-SSH免密钥登陆" class="headerlink" title="4. SSH免密钥登陆"></a>4. SSH免密钥登陆</h4><ul>
+<li><p>在node1上生成公钥私钥</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line">ssh-keygen</span><br><span class="line"></span><br><span class="line">Generating public/private rsa key pair.</span><br><span class="line">Enter file in which to save the key (/root/.ssh/id_rsa): </span><br><span class="line">Enter passphrase (empty for no passphrase): </span><br><span class="line">Enter same passphrase again: </span><br><span class="line">Your identification has been saved in /root/.ssh/id_rsa.</span><br><span class="line">Your public key has been saved in /root/.ssh/id_rsa.pub.</span><br><span class="line">The key fingerprint is:</span><br><span class="line">SHA256:QUAgFH5KBc/Erlf1JWSBbKeEepPJqMBqpWbc02/uFj8 root@master</span><br><span class="line">The key&#x27;s randomart image is:</span><br><span class="line">+---[RSA 2048]----+</span><br><span class="line">| .=++oo+.o+.     |</span><br><span class="line">| . *. ..*.o .    |</span><br><span class="line">|. o.++ *.+ o     |</span><br><span class="line">|.o ++ B ...      |</span><br><span class="line">|o.=o.o .S        |</span><br><span class="line">|.*oo.. .         |</span><br><span class="line">|+  .. . o        |</span><br><span class="line">|       + E       |</span><br><span class="line">|      =o  .      |</span><br><span class="line">+----[SHA256]-----+</span><br></pre></td></tr></table></figure></li>
+<li><p>在node1上配置免密登陆node1 node2 node3</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">ssh-copy-id master</span><br><span class="line">ssh-copy-id slave1</span><br><span class="line">ssh-copy-id slave2</span><br></pre></td></tr></table></figure></li>
+</ul>
+<hr>
+<h2 id="二、安装配置JDK"><a href="#二、安装配置JDK" class="headerlink" title="二、安装配置JDK"></a>二、安装配置JDK</h2><h4 id="1-创建编译环境软件所需的根目录"><a href="#1-创建编译环境软件所需的根目录" class="headerlink" title="1.创建编译环境软件所需的根目录"></a>1.创建编译环境软件所需的根目录</h4><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">mkdir -p /export/server</span><br></pre></td></tr></table></figure>
+
+<h4 id="2-安装JDK1-8-（首先将-jdk-8u241-linux-x64-tar-gz压缩包上传到-export-server目录，并解压）"><a href="#2-安装JDK1-8-（首先将-jdk-8u241-linux-x64-tar-gz压缩包上传到-export-server目录，并解压）" class="headerlink" title="2.安装JDK1.8 （首先将 jdk-8u241-linux-x64.tar.gz压缩包上传到/export/server目录，并解压）"></a>2.安装JDK1.8 （首先将 jdk-8u241-linux-x64.tar.gz压缩包上传到/export/server目录，并解压）</h4><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">tar -zxvf jdk-8u241-linux-x64.tar.gz</span><br></pre></td></tr></table></figure>
+
+<h4 id="3-配置全局环境变量"><a href="#3-配置全局环境变量" class="headerlink" title="3.配置全局环境变量"></a>3.配置全局环境变量</h4><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">vim /etc/profile</span><br><span class="line"></span><br><span class="line">export JAVA_HOME=/export/server/jdk1.8.0_241</span><br><span class="line">export PATH=$PATH:$JAVA_HOME/bin</span><br><span class="line">export CLASSPATH=.:$JAVA_HOME/lib/dt.jar:$JAVA_HOME/lib/tools.jar</span><br></pre></td></tr></table></figure>
+
+<h4 id="4-加载环境变量"><a href="#4-加载环境变量" class="headerlink" title="4.加载环境变量"></a>4.加载环境变量</h4><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">source /etc/profile</span><br></pre></td></tr></table></figure>
+
+<h4 id="5-查看java版本"><a href="#5-查看java版本" class="headerlink" title="5.查看java版本"></a>5.查看java版本</h4><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">java -version</span><br><span class="line">(base) [root@node1 ~]# java -version</span><br><span class="line">java version &quot;1.8.0_241&quot;</span><br><span class="line">Java(TM) SE Runtime Environment (build 1.8.0_241-b07)</span><br><span class="line">Java HotSpot(TM) 64-Bit Server VM (build 25.241-b07, mixed mode)</span><br></pre></td></tr></table></figure>
+
+<p>出现以下内容则代表安装成功</p>
+<h4 id="6-将java文件从node1中传输到node2-node3中，传输完成后，配置方法参考-3-4"><a href="#6-将java文件从node1中传输到node2-node3中，传输完成后，配置方法参考-3-4" class="headerlink" title="6.将java文件从node1中传输到node2 node3中，传输完成后，配置方法参考 3. 4."></a>6.将java文件从node1中传输到node2 node3中，传输完成后，配置方法参考 3. 4.</h4><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">scp -r /export/server/jdk1.8.0_241/ root@node2:/export/server/</span><br><span class="line">scp -r /export/server/jdk1.8.0_241/ root@node3:/export/server/</span><br></pre></td></tr></table></figure>
+
+<h4 id="7-在三台主机分别创建软连接（为了方便）"><a href="#7-在三台主机分别创建软连接（为了方便）" class="headerlink" title="7. 在三台主机分别创建软连接（为了方便）"></a>7. 在三台主机分别创建软连接（为了方便）</h4><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">cd /export/server</span><br><span class="line">ln -s jdk1.8.0_241/jdk</span><br></pre></td></tr></table></figure>
+
+<hr>
+<h2 id="三、安装配置Hadoop"><a href="#三、安装配置Hadoop" class="headerlink" title="三、安装配置Hadoop"></a>三、安装配置Hadoop</h2><h4 id="1-安装Hadoop-（首先将hadoop-3-3-0-Centos7-with-wnappy-tar-gz压缩包上传到-export-server目录，并解压）"><a href="#1-安装Hadoop-（首先将hadoop-3-3-0-Centos7-with-wnappy-tar-gz压缩包上传到-export-server目录，并解压）" class="headerlink" title="1.安装Hadoop （首先将hadoop-3.3.0-Centos7-with-wnappy.tar.gz压缩包上传到/export/server目录，并解压）"></a>1.安装Hadoop （首先将hadoop-3.3.0-Centos7-with-wnappy.tar.gz压缩包上传到/export/server目录，并解压）</h4><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">tar -zxvf hadoop-3.3.0-Centos7-with-wnappy.tar.gz</span><br></pre></td></tr></table></figure>
+
+<h4 id="2-创建软连接"><a href="#2-创建软连接" class="headerlink" title="2.创建软连接"></a>2.创建软连接</h4><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ln -s jhadoop-3.3.0/ hadoop</span><br></pre></td></tr></table></figure>
+
+<h4 id="3-修改配置文件"><a href="#3-修改配置文件" class="headerlink" title="3.修改配置文件"></a>3.修改配置文件</h4><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">cd  /export/server/hadoop/etc/hadoop</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li><p>修改Hadoop-env.sh文件 </p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">vim hadoop-env.sh</span><br><span class="line"><span class="meta prompt_"></span></span><br><span class="line"><span class="meta prompt_">#</span><span class="language-bash">末尾添加</span></span><br><span class="line">export JAVA_HOME=/export/server/jdk</span><br><span class="line"></span><br><span class="line">export HDFS_NAMENODE_USER=root</span><br><span class="line">export HDFS_DATANODE_USER=root</span><br><span class="line">export HDFS_SECONDARYNAMENODE_USER=root</span><br><span class="line">export YARN_RESOURCEMANAGER_USER=root</span><br><span class="line">export YARN_NODEMANAGER_USER=root</span><br></pre></td></tr></table></figure></li>
+<li><p>修改core-site.xml文件</p>
+<ul>
+<li><p>设置默认系统</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">&lt;property&gt;</span><br><span class="line">    &lt;name&gt;fs.defaultFS&lt;/name&gt;</span><br><span class="line">    &lt;value&gt;hdfs://node1:8020&lt;/value&gt;</span><br><span class="line">&lt;/property&gt;</span><br></pre></td></tr></table></figure></li>
+<li><p>设置hadoop本地保存数据路径</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">&lt;property&gt;</span><br><span class="line">    &lt;name&gt;hadoop.tmp.dir&lt;/name&gt;</span><br><span class="line">    &lt;value&gt;/export/data/hadoop-3.3.0&lt;/value&gt;</span><br><span class="line">&lt;/property&gt;</span><br></pre></td></tr></table></figure></li>
+<li><p>设置HDFS web UI用户身份</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">&lt;property&gt;</span><br><span class="line">    &lt;name&gt;hadoop.http.staticuser.user&lt;/name&gt;</span><br><span class="line">    &lt;value&gt;root&lt;/value&gt;</span><br><span class="line">&lt;/property&gt;</span><br></pre></td></tr></table></figure></li>
+<li><p>整合hive用户代理设置</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">&lt;property&gt;</span><br><span class="line">    &lt;name&gt;hadoop.proxyuser.root.hosts&lt;/name&gt;</span><br><span class="line">    &lt;value&gt;*&lt;/value&gt;</span><br><span class="line">&lt;/property&gt;</span><br><span class="line">    </span><br><span class="line">&lt;property&gt;</span><br><span class="line">    &lt;name&gt;hadoop.proxyuser.root.groups&lt;/name&gt;</span><br><span class="line">    &lt;value&gt;*&lt;/value&gt;</span><br><span class="line">&lt;/property&gt;</span><br></pre></td></tr></table></figure></li>
+<li><p>设置文件系统垃圾桶保存时间</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">&lt;property&gt;</span><br><span class="line">    &lt;name&gt;fs.trash.interval&lt;/name&gt;</span><br><span class="line">    &lt;value&gt;1440&lt;/value&gt;</span><br><span class="line">&lt;/property&gt;</span><br></pre></td></tr></table></figure></li>
+</ul>
+</li>
+<li><p>配置mapred-site.xml</p>
+<ul>
+<li><p>设置MR程序默认运行模式：yarn集群模式 local本地模式</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">&lt;property&gt;</span><br><span class="line">  &lt;name&gt;mapreduce.framework.name&lt;/name&gt;</span><br><span class="line">  &lt;value&gt;yarn&lt;/value&gt;</span><br><span class="line">&lt;/property&gt;</span><br></pre></td></tr></table></figure></li>
+<li><p>设置MR程序历史服务地址</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">&lt;property&gt;</span><br><span class="line">  &lt;name&gt;mapreduce.jobhistory.address&lt;/name&gt;</span><br><span class="line">  &lt;value&gt;node1:10020&lt;/value&gt;</span><br><span class="line">&lt;/property&gt;</span><br></pre></td></tr></table></figure></li>
+<li><p>设置MR程序历史服务器web端地址</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line">&lt;property&gt;</span><br><span class="line">  &lt;name&gt;mapreduce.jobhistory.webapp.address&lt;/name&gt;</span><br><span class="line">  &lt;value&gt;node1:19888&lt;/value&gt;</span><br><span class="line">&lt;/property&gt;</span><br><span class="line">    </span><br><span class="line">&lt;property&gt;</span><br><span class="line">  &lt;name&gt;yarn.app.mapreduce.am.env&lt;/name&gt;</span><br><span class="line">  &lt;value&gt;HADOOP_MAPRED_HOME=$&#123;HADOOP_HOME&#125;&lt;/value&gt;</span><br><span class="line">&lt;/property&gt;</span><br><span class="line">    </span><br><span class="line">&lt;property&gt;</span><br><span class="line">  &lt;name&gt;mapreduce.map.env&lt;/name&gt;</span><br><span class="line">  &lt;value&gt;HADOOP_MAPRED_HOME=$&#123;HADOOP_HOME&#125;&lt;/value&gt;</span><br><span class="line">&lt;/property&gt;</span><br><span class="line">    </span><br><span class="line">&lt;property&gt;</span><br><span class="line">  &lt;name&gt;mapreduce.reduce.env&lt;/name&gt;</span><br><span class="line">  &lt;value&gt;HADOOP_MAPRED_HOME=$&#123;HADOOP_HOME&#125;&lt;/value&gt;</span><br><span class="line">&lt;/property&gt;</span><br></pre></td></tr></table></figure></li>
+</ul>
+</li>
+<li><p>修改yarn-site.xml</p>
+<ul>
+<li><p>设置YARN集群主角色运行机器位置</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">&lt;property&gt;</span><br><span class="line">    &lt;name&gt;yarn.resourcemanager.hostname&lt;/name&gt;</span><br><span class="line">    &lt;value&gt;node1&lt;/value&gt;</span><br><span class="line">&lt;/property&gt;</span><br><span class="line">    </span><br><span class="line">&lt;property&gt;</span><br><span class="line">    &lt;name&gt;yarn.nodemanager.aux-services&lt;/name&gt;</span><br><span class="line">    &lt;value&gt;mapreduce_shuffle&lt;/value&gt;</span><br><span class="line">&lt;/property&gt;</span><br></pre></td></tr></table></figure></li>
+<li><p>是否将对容器实施物理内存限制</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">&lt;property&gt;</span><br><span class="line">    &lt;name&gt;yarn.nodemanager.pmem-check-enabled&lt;/name&gt;</span><br><span class="line">    &lt;value&gt;false&lt;/value&gt;</span><br><span class="line">&lt;/property&gt;</span><br><span class="line">&lt;property&gt;</span><br><span class="line">    &lt;name&gt;yarn.nodemanager.vmem-check-enabled&lt;/name&gt;</span><br><span class="line">    &lt;value&gt;false&lt;/value&gt;</span><br><span class="line">&lt;/property&gt;</span><br><span class="line">&lt;property&gt;</span><br><span class="line">  &lt;name&gt;yarn.log-aggregation-enable&lt;/name&gt;</span><br><span class="line">  &lt;value&gt;true&lt;/value&gt;</span><br><span class="line">&lt;/property&gt;</span><br></pre></td></tr></table></figure></li>
+<li><p>设置yarn历史服务器地址</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">&lt;property&gt;</span><br><span class="line">    &lt;name&gt;yarn.log.server.url&lt;/name&gt;</span><br><span class="line">    &lt;value&gt;http://node1:19888/jobhistory/logs&lt;/value&gt;</span><br><span class="line">&lt;/property&gt;</span><br></pre></td></tr></table></figure></li>
+<li><p>历史日志保存的时间 7天</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">&lt;property&gt;</span><br><span class="line">  &lt;name&gt;yarn.log-aggregation.retain-seconds&lt;/name&gt;</span><br><span class="line">  &lt;value&gt;604800&lt;/value&gt;</span><br><span class="line">&lt;/property&gt;</span><br></pre></td></tr></table></figure></li>
+</ul>
+</li>
+</ul>
+<h4 id="4-将Hadoop文件从node1中传输到node2-node3中"><a href="#4-将Hadoop文件从node1中传输到node2-node3中" class="headerlink" title="4. 将Hadoop文件从node1中传输到node2 node3中"></a>4. 将Hadoop文件从node1中传输到node2 node3中</h4><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">scp -r /export/server/hadoop/ root@node2:/export/server/</span><br><span class="line">scp -r /export/server/hadoop/ root@node3:/export/server/</span><br></pre></td></tr></table></figure>
+
+<h4 id="5-三台主机分别配置全局变量"><a href="#5-三台主机分别配置全局变量" class="headerlink" title="5. 三台主机分别配置全局变量"></a>5. 三台主机分别配置全局变量</h4><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">export HADOOP_HOME=/export/server/hadoop-3.3.0</span><br><span class="line">export PATH=$PATH:$HADOOP_HOME/bin:$HADOOP_HOME/sbin</span><br></pre></td></tr></table></figure>
+
+<h4 id="6-重新加载全局环境变量"><a href="#6-重新加载全局环境变量" class="headerlink" title="6.重新加载全局环境变量"></a>6.重新加载全局环境变量</h4><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">source /etc/profile</span><br></pre></td></tr></table></figure>
+
+<h4 id="7-Hadoop集群启动前需要进行格式化"><a href="#7-Hadoop集群启动前需要进行格式化" class="headerlink" title="7.Hadoop集群启动前需要进行格式化"></a>7.Hadoop集群启动前需要进行格式化</h4><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">hdfs namenode -format</span><br></pre></td></tr></table></figure>
+
+<h4 id="8-启动hadoop集群"><a href="#8-启动hadoop集群" class="headerlink" title="8.启动hadoop集群"></a>8.启动hadoop集群</h4><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">cd /export/server/hadoop/bin</span><br><span class="line"></span><br><span class="line">start-dfs.sh</span><br><span class="line">start-yarn.sh</span><br></pre></td></tr></table></figure>
+
+<h4 id="9-查看当前所有进程服务"><a href="#9-查看当前所有进程服务" class="headerlink" title="9.查看当前所有进程服务"></a>9.查看当前所有进程服务</h4><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line">(base) [root@node1 ~]# jps</span><br><span class="line">3040 ResourceManager</span><br><span class="line">3713 Jps</span><br><span class="line">3240 NodeManager</span><br><span class="line">2603 DataNode</span><br><span class="line">2335 NameNode</span><br><span class="line"></span><br><span class="line">(base) [root@node2 ~]# jps</span><br><span class="line">2322 Jps</span><br><span class="line">2101 SecondaryNameNode</span><br><span class="line">2199 NodeManager</span><br><span class="line">1978 DataNode</span><br><span class="line">You have new mail in /var/spool/mail/root</span><br><span class="line"></span><br><span class="line">(base) [root@node3 ~]# jps</span><br><span class="line">2225 Jps</span><br><span class="line">1972 DataNode</span><br><span class="line">2101 NodeManager</span><br><span class="line">You have new mail in /var/spool/mail/root</span><br></pre></td></tr></table></figure>
+
+<h4 id="10-进入hdfs-yarn-web-UI页面"><a href="#10-进入hdfs-yarn-web-UI页面" class="headerlink" title="10.进入hdfs yarn web UI页面"></a>10.进入hdfs yarn web UI页面</h4><p><figure class="figure"><img src="/2022/05/22/Spark%E5%9F%BA%E7%A1%80%E7%8E%AF%E5%A2%83%E9%85%8D%E7%BD%AE/2.png" alt="2.png"><figcaption class="figure__caption">2.png</figcaption></figure></p>
+<p><figure class="figure"><img src="/2022/05/22/Spark%E5%9F%BA%E7%A1%80%E7%8E%AF%E5%A2%83%E9%85%8D%E7%BD%AE/3.png" alt="3.png"><figcaption class="figure__caption">3.png</figcaption></figure></p>
+<hr>
+<h2 id="四、安装配置zookeeper"><a href="#四、安装配置zookeeper" class="headerlink" title="四、安装配置zookeeper"></a>四、安装配置zookeeper</h2><h4 id="1-安装zookeeper-（首先将zookeeper-3-4-10-tar-gz压缩包上传到-export-server目录，并解压）"><a href="#1-安装zookeeper-（首先将zookeeper-3-4-10-tar-gz压缩包上传到-export-server目录，并解压）" class="headerlink" title="1.安装zookeeper （首先将zookeeper-3.4.10.tar.gz压缩包上传到/export/server目录，并解压）"></a>1.安装zookeeper （首先将zookeeper-3.4.10.tar.gz压缩包上传到/export/server目录，并解压）</h4><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">tar -zxvf zookeeper-3.4.10.tar.gz</span><br></pre></td></tr></table></figure>
+
+<h4 id="2-创建软连接-1"><a href="#2-创建软连接-1" class="headerlink" title="2.创建软连接"></a>2.创建软连接</h4><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ln -s zookeeper-3.4.10/ zookeeper</span><br></pre></td></tr></table></figure>
+
+<h4 id="3-修改配置文件-1"><a href="#3-修改配置文件-1" class="headerlink" title="3.修改配置文件"></a>3.修改配置文件</h4><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">cd /export/server/zookeeper/conf/ </span><br></pre></td></tr></table></figure>
+
+<ul>
+<li><p>将 zoo_sample.cfg 文件复制为新文件 zoo.cfg </p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">cp zoo_sample.cfg zoo.cfg</span><br></pre></td></tr></table></figure></li>
+<li><p>配置zoo.cfg文件</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">vim zoo.cfg</span><br><span class="line"><span class="meta prompt_"></span></span><br><span class="line"><span class="meta prompt_">#</span><span class="language-bash">Zookeeper的数据存放目录</span></span><br><span class="line">dataDir=/export/server/zookeeper/zkdatas</span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">保留多少个快照</span></span><br><span class="line">autopurge.snapRetainCount=3</span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">日志多少小时清理一次</span></span><br><span class="line">autopurge.purgeInterval=1</span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">集群中服务器地址</span></span><br><span class="line">server.1=node1:2888:3888</span><br><span class="line">server.2=node2:2888:3888</span><br><span class="line">server.3=node3:2888:3888</span><br></pre></td></tr></table></figure></li>
+</ul>
+<h4 id="4-进入-export-server-zookeeper-zkdatas-目录在此目录下创建-myid-文件，将-1-写入进去"><a href="#4-进入-export-server-zookeeper-zkdatas-目录在此目录下创建-myid-文件，将-1-写入进去" class="headerlink" title="4.进入 /export/server/zookeeper/zkdatas 目录在此目录下创建 myid 文件，将 1 写入进去"></a>4.进入 /export/server/zookeeper/zkdatas 目录在此目录下创建 myid 文件，将 1 写入进去</h4><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">cd /export/server/zookeeper/zkdata</span><br><span class="line"></span><br><span class="line">touch myid</span><br><span class="line"></span><br><span class="line">echo &#x27;1&#x27; &gt; myid</span><br></pre></td></tr></table></figure>
+
+<h4 id="5-将zookeeper文件从node1中传输到node2-node3中"><a href="#5-将zookeeper文件从node1中传输到node2-node3中" class="headerlink" title="5.将zookeeper文件从node1中传输到node2 node3中"></a>5.将zookeeper文件从node1中传输到node2 node3中</h4><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">scp -r /export/server/zookeeper-3.4.10/ node2:$PWD</span><br><span class="line">scp -r /export/server/zookeeper-3.4.10/ node3:$PWD</span><br></pre></td></tr></table></figure>
+
+<h4 id="6-创建软连接"><a href="#6-创建软连接" class="headerlink" title="6.创建软连接"></a>6.创建软连接</h4><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ln -s zookeeper-3.4.10/ zookeeper</span><br></pre></td></tr></table></figure>
+
+<h4 id="7-node2-node3分别进入-export-server-zookeeper-zkdatas-目录在此目录下创建-myid-文件，将-2-，3-写入进去"><a href="#7-node2-node3分别进入-export-server-zookeeper-zkdatas-目录在此目录下创建-myid-文件，将-2-，3-写入进去" class="headerlink" title="7.node2 node3分别进入 /export/server/zookeeper/zkdatas 目录在此目录下创建 myid 文件，将 2 ，3 写入进去"></a>7.node2 node3分别进入 /export/server/zookeeper/zkdatas 目录在此目录下创建 myid 文件，将 2 ，3 写入进去</h4><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">cd /export/server/zookeeper/zkdatas/</span><br><span class="line"></span><br><span class="line">[root@node2 zkdatas]# vim myid </span><br><span class="line">[root@node2 zkdatas]# more myid </span><br><span class="line">2</span><br><span class="line"></span><br><span class="line">[root@node3 zkdatas]# vim myid </span><br><span class="line">[root@node3 zkdatas]# more myid </span><br><span class="line">3</span><br></pre></td></tr></table></figure>
+
+<h4 id="8-配置全局环境变量"><a href="#8-配置全局环境变量" class="headerlink" title="8.配置全局环境变量"></a>8.配置全局环境变量</h4><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">vim /etc/profile</span><br><span class="line"><span class="meta prompt_"></span></span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">zookeeper 环境变量</span></span><br><span class="line">export ZOOKEEPER_HOME=/export/server/zookeeper</span><br><span class="line">export PATH=$PATH:$ZOOKEEPER_HOME/bin</span><br></pre></td></tr></table></figure>
+
+<h4 id="9-重新加载环境变量"><a href="#9-重新加载环境变量" class="headerlink" title="9.重新加载环境变量"></a>9.重新加载环境变量</h4><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">source /etc/profile</span><br></pre></td></tr></table></figure>
+
+<h4 id="10-启动zookeeper服务"><a href="#10-启动zookeeper服务" class="headerlink" title="10.启动zookeeper服务"></a>10.启动zookeeper服务</h4><ul>
+<li><p>普通启动</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">cd  /export/server/zookeeper-3.4.10/bin </span><br><span class="line"></span><br><span class="line">zkServer.sh start</span><br></pre></td></tr></table></figure></li>
+<li><p>编写脚本进行一键启动</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br></pre></td><td class="code"><pre><span class="line">cd /bin</span><br><span class="line"></span><br><span class="line">vim zkall.sh</span><br><span class="line"><span class="meta prompt_"></span></span><br><span class="line"><span class="meta prompt_">#</span><span class="language-bash">!/bin/bash</span></span><br><span class="line">if [ $# -eq 0 ]</span><br><span class="line">then</span><br><span class="line">echo &quot;please input param:start stop&quot;</span><br><span class="line">else</span><br><span class="line">if [ $1 = start  ]</span><br><span class="line">then</span><br><span class="line">for i in &#123;1..3&#125;</span><br><span class="line">do</span><br><span class="line">echo &quot;$&#123;1&#125;ing node$&#123;i&#125;&quot;</span><br><span class="line">ssh node$&#123;i&#125; &quot;source /etc/profile;/export/server/zookeeper/bin/zkServer.sh start&quot;</span><br><span class="line">done</span><br><span class="line">fi</span><br><span class="line"></span><br><span class="line">if [ $1 = stop ]</span><br><span class="line">then</span><br><span class="line">for i in &#123;1..3&#125;</span><br><span class="line">do</span><br><span class="line">echo &quot;$&#123;1&#125;ping node$&#123;i&#125;&quot;</span><br><span class="line">ssh node$&#123;i&#125; &quot;source /etc/profile;/export/server/zookeeper/bin/zkServer.sh stop&quot;</span><br><span class="line">done</span><br><span class="line">fi</span><br><span class="line"></span><br><span class="line">if [ $1 = status ]</span><br><span class="line">then</span><br><span class="line">for i in &#123;1..3&#125;</span><br><span class="line">do</span><br><span class="line">echo &quot;node$&#123;i&#125; status:&quot;</span><br><span class="line">ssh node$&#123;i&#125; &quot;source /etc/profile;/export/server/zookeeper/bin/zkServer.sh status&quot;</span><br><span class="line">done</span><br><span class="line">fi</span><br><span class="line"></span><br><span class="line">fi</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li><p>给编写的脚本赋予可执行权限</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">chmod +x zkall.sh</span><br></pre></td></tr></table></figure></li>
+</ul>
+<p><strong>注：启动时，无需进入任意文件目录下，直接执行zkall.sh start 即可</strong></p>
+</li>
+</ul>
+<h4 id="11-查看进程"><a href="#11-查看进程" class="headerlink" title="11.查看进程"></a>11.查看进程</h4><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">(base) [root@node1 ~]# jps</span><br><span class="line">4957 Jps</span><br><span class="line">4911 QuorumPeerMain</span><br><span class="line"></span><br><span class="line">(base) [root@node2 ~]# jps</span><br><span class="line">2736 QuorumPeerMain</span><br><span class="line">2795 Jps</span><br><span class="line">You have new mail in /var/spool/mail/root</span><br><span class="line"></span><br><span class="line">(base) [root@node3 ~]# jps</span><br><span class="line">2576 Jps</span><br><span class="line">2533 QuorumPeerMain</span><br><span class="line">You have new mail in /var/spool/mail/root</span><br></pre></td></tr></table></figure>
+
+
+	
+
+	
+		<span class="different-posts"><a href="/notrip/Lil_Tecca.github.io.git/2022/05/22/Spark%E5%9F%BA%E7%A1%80%E7%8E%AF%E5%A2%83%E9%85%8D%E7%BD%AE/" onclick="window.history.go(-1); return false;">⬅️ Go back </a></span>
+
+	
+
+</article>
+
+	</main>
+
+	<footer class="footer">
+	<div class="footer-content">
+		
+	      <div class="footer__element">
+	<p>Hi there, <br />welcome to my Blog glad you found it. Have a look around, will you?</p>
+</div>
+
+	    
+	      <div class="footer__element">
+	<h5>Check out</h5>
+	<ul class="footer-links">
+		<li class="footer-links__link"><a href="/archives">Archive</a></li>
+		
+		  <li class="footer-links__link"><a href="/atom.xml">RSS</a></li>
+	    
+		<li class="footer-links__link"><a href="/about">about page</a></li>
+		<li class="footer-links__link"><a href="/tags">Tags</a></li>
+		<li class="footer-links__link"><a href="/categories">Categories</a></li>
+	</ul>
+</div>
+
+	    
+
+		<div class="footer-credit">
+			<span>© 2022 notrip | Powered by <a target="_blank" rel="noopener" href="https://hexo.io/">Hexo</a> | Theme <a href="https://github.com/HoverBaum/meilidu-hexo">MeiliDu</a></span>
+		</div>
+
+	</div>
+
+
+</footer>
+
+
+
+</body>
+
+</html>
