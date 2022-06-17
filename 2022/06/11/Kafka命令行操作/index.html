@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+	<meta name="theme-color" content="#33474d">
+	<title>Kafka命令行操作 | Hexo</title>
+	<link rel="stylesheet" href="/css/style.css" />
+	
+      <link rel="alternate" href="/atom.xml" title="Hexo" type="application/atom+xml">
+    
+<meta name="generator" content="Hexo 5.4.2"></head>
+
+<body>
+
+	<header class="header">
+		<nav class="header__nav">
+			
+				<a href="/archives" class="header__link">Archive</a>
+			
+				<a href="/tags" class="header__link">Tags</a>
+			
+				<a href="/atom.xml" class="header__link">RSS</a>
+			
+		</nav>
+		<h1 class="header__title"><a href="/">Hexo</a></h1>
+		<h2 class="header__subtitle"></h2>
+	</header>
+
+	<main>
+		<article>
+	
+		<h1>Kafka命令行操作</h1>
+	
+	<div class="article__infos">
+		<span class="article__date">2022-06-11</span><br />
+		
+		
+	</div>
+
+	
+
+	
+		<h5 id="博主的本地环境为：Macbok-pro-macOS-Monterey-12-3-1"><a href="#博主的本地环境为：Macbok-pro-macOS-Monterey-12-3-1" class="headerlink" title="博主的本地环境为：Macbok pro , macOS Monterey 12.3.1"></a><em>博主的本地环境为：Macbok pro , macOS Monterey 12.3.1</em></h5><ul>
+<li>Mac 用户注意需要注意，虚拟机使用VMware Fusion，镜像为CentOS7.</li>
+</ul>
+<hr>
+<h3 id="一、Kafka命令行操作"><a href="#一、Kafka命令行操作" class="headerlink" title="一、Kafka命令行操作"></a>一、Kafka命令行操作</h3><p> <strong>Kafka中的bin目录下有很多命令脚本，常用的例如：</strong></p>
+<p>  kafka-topics.sh——-&gt;用于管理topic主题</p>
+<p>  Kafka-config.sh——–&gt;用于对topic主题的配置管理</p>
+<p>  kafka-console-producer.sh——–&gt;用于生产者进行写入数据</p>
+<p>  kafka-console-consumer.sh——-&gt;用于消费者进行读取数据</p>
+<h3 id="1-kafka-topics-sh"><a href="#1-kafka-topics-sh" class="headerlink" title="(1) kafka-topics.sh"></a>(1) kafka-topics.sh</h3><table>
+<thead>
+<tr>
+<th align="center">–create</th>
+<th align="center"><strong>指定创建topic主题动作</strong></th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="center"><strong>–topic</strong></td>
+<td align="center"><strong>指定新建topic的名称</strong></td>
+</tr>
+<tr>
+<td align="center"><strong>–zookeeper</strong></td>
+<td align="center"><strong>指定kafka连接ZK的连接的url</strong></td>
+</tr>
+<tr>
+<td align="center"><strong>–partitions</strong></td>
+<td align="center"><strong>指定当前创建的kafka分区数量</strong></td>
+</tr>
+<tr>
+<td align="center"><strong>–replication-factor</strong></td>
+<td align="center"><strong>指定每个分区的复制因子个数</strong></td>
+</tr>
+</tbody></table>
+<h4 id="1"><a href="#1" class="headerlink" title="1."></a>1.</h4><ul>
+<li><strong>查看所有topic</strong></li>
+</ul>
+<p><figure class="figure"><img src="/2022/06/11/Kafka%E5%91%BD%E4%BB%A4%E8%A1%8C%E6%93%8D%E4%BD%9C/mojiyang/blog/source/_posts/Kafka%E5%91%BD%E4%BB%A4%E8%A1%8C%E6%93%8D%E4%BD%9C/%E5%9B%BE%E7%89%871.png" alt="markdown"><figcaption class="figure__caption">markdown</figcaption></figure></p>
+<ul>
+<li><p><strong>查看所有topic详细内容</strong></p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">./kafka-topics.sh --zookeeper --create node1:2181 --describe</span><br></pre></td></tr></table></figure>
+
+<p><figure class="figure"><img src="/2022/06/11/Kafka%E5%91%BD%E4%BB%A4%E8%A1%8C%E6%93%8D%E4%BD%9C/mojiyang/blog/source/_posts/Kafka%E5%91%BD%E4%BB%A4%E8%A1%8C%E6%93%8D%E4%BD%9C/%E5%9B%BE%E7%89%873.png" alt="markdown"><figcaption class="figure__caption">markdown</figcaption></figure></p>
+</li>
+<li><p><strong>增加分区</strong></p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">./kafka-topics.sh --alter --topic tpc_2 --partitions 3 --zookeeper node1:2181</span><br></pre></td></tr></table></figure>
+
+<p><figure class="figure"><img src="/2022/06/11/Kafka%E5%91%BD%E4%BB%A4%E8%A1%8C%E6%93%8D%E4%BD%9C/mojiyang/blog/source/_posts/Kafka%E5%91%BD%E4%BB%A4%E8%A1%8C%E6%93%8D%E4%BD%9C/%E5%9B%BE%E7%89%875.png" alt="markdown"><figcaption class="figure__caption">markdown</figcaption></figure></p>
+</li>
+</ul>
+<h4 id="2-创建新的topic"><a href="#2-创建新的topic" class="headerlink" title="2.创建新的topic"></a>2.创建新的topic</h4><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">./kafka-topics.sh --zookeeper --create --replication-factor 3 --partitions 3 --topic tpc_11 node1:2181,node2:2181,node3:2181</span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p>指令中的含义：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">--replication-factor 副本数量</span><br><span class="line">--partitions 分区数量</span><br><span class="line">--topic topic 名称</span><br></pre></td></tr></table></figure>
+</blockquote>
+<p><figure class="figure"><img src="/2022/06/11/Kafka%E5%91%BD%E4%BB%A4%E8%A1%8C%E6%93%8D%E4%BD%9C/mojiyang/blog/source/_posts/Kafka%E5%91%BD%E4%BB%A4%E8%A1%8C%E6%93%8D%E4%BD%9C/%E5%9B%BE%E7%89%872.png"></figure></p>
+<h4 id="2-删除topic"><a href="#2-删除topic" class="headerlink" title="2.删除topic"></a>2.删除topic</h4><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">./kafka-topics.sh  --delete --topic tpc_11 --zookeeper node1：2181</span><br></pre></td></tr></table></figure>
+
+<hr>
+<h3 id="（2）-Kafka-config-sh"><a href="#（2）-Kafka-config-sh" class="headerlink" title="（2） Kafka-config.sh"></a>（2） Kafka-config.sh</h3><ul>
+<li>查看 topic 的配置</li>
+</ul>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">./kafka-configs.sh zookeeper node1: 2181 --describe --entity-type topics --entity-name tpc_2</span><br></pre></td></tr></table></figure>
+
+<p><figure class="figure"><img src="/2022/06/11/Kafka%E5%91%BD%E4%BB%A4%E8%A1%8C%E6%93%8D%E4%BD%9C/mojiyang/blog/source/_posts/Kafka%E5%91%BD%E4%BB%A4%E8%A1%8C%E6%93%8D%E4%BD%9C/6.png"></figure></p>
+<ul>
+<li></li>
+</ul>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">./kafka-configs.sh zookeeper node1: 2181 --describe --entity-type brokers --entity-name 0 --zookeeper node1:2181</span><br></pre></td></tr></table></figure>
+
+<p><figure class="figure"><img src="/2022/06/11/Kafka%E5%91%BD%E4%BB%A4%E8%A1%8C%E6%93%8D%E4%BD%9C/mojiyang/blog/source/_posts/Kafka%E5%91%BD%E4%BB%A4%E8%A1%8C%E6%93%8D%E4%BD%9C/7.png"></figure></p>
+<hr>
+<h3 id="3-生产者与消费者操作"><a href="#3-生产者与消费者操作" class="headerlink" title="(3)生产者与消费者操作"></a>(3)生产者与消费者操作</h3><p>​            **生产者:kafka-console-producer **</p>
+<p>​            <em><strong>消费者:kafka-console-consumer</strong></em></p>
+<ul>
+<li><p>数据写入与读取</p>
+<ul>
+<li><p>生产者</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">./kafka-console-producer.sh --broker-list node1:9092, node2:9092, node3:9092 --topic tpc_11</span><br></pre></td></tr></table></figure>
+
+
+
+<p><figure class="figure"><img src="/2022/06/11/Kafka%E5%91%BD%E4%BB%A4%E8%A1%8C%E6%93%8D%E4%BD%9C/mojiyang/blog/source/_posts/Kafka%E5%91%BD%E4%BB%A4%E8%A1%8C%E6%93%8D%E4%BD%9C/%E5%9B%BE%E7%89%876.png"></figure></p>
+</li>
+<li><p>消费者</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">./kafka-console-consumer.sh --bootstrap-server node1:9092, node2:9092, node3:9092 --topic tpc_11 --from-beginning</span><br></pre></td></tr></table></figure>
+
+<p><figure class="figure"><img src="/2022/06/11/Kafka%E5%91%BD%E4%BB%A4%E8%A1%8C%E6%93%8D%E4%BD%9C/mojiyang/blog/source/_posts/Kafka%E5%91%BD%E4%BB%A4%E8%A1%8C%E6%93%8D%E4%BD%9C/%E5%9B%BE%E7%89%877.png"></figure></p>
+</li>
+</ul>
+</li>
+</ul>
+
+	
+
+	
+		<span class="different-posts"><a href="/2022/06/11/Kafka%E5%91%BD%E4%BB%A4%E8%A1%8C%E6%93%8D%E4%BD%9C/" onclick="window.history.go(-1); return false;">⬅️ Go back </a></span>
+
+	
+
+</article>
+
+	</main>
+
+	<footer class="footer">
+	<div class="footer-content">
+		
+	      <div class="footer__element">
+	<p>Hi there, <br />welcome to my Blog glad you found it. Have a look around, will you?</p>
+</div>
+
+	    
+	      <div class="footer__element">
+	<h5>Check out</h5>
+	<ul class="footer-links">
+		<li class="footer-links__link"><a href="/archives">Archive</a></li>
+		
+		  <li class="footer-links__link"><a href="/atom.xml">RSS</a></li>
+	    
+		<li class="footer-links__link"><a href="/about">about page</a></li>
+		<li class="footer-links__link"><a href="/tags">Tags</a></li>
+		<li class="footer-links__link"><a href="/categories">Categories</a></li>
+	</ul>
+</div>
+
+	    
+
+		<div class="footer-credit">
+			<span>© 2022 notrip | Powered by <a target="_blank" rel="noopener" href="https://hexo.io/">Hexo</a> | Theme <a target="_blank" rel="noopener" href="https://github.com/HoverBaum/meilidu-hexo">MeiliDu</a></span>
+		</div>
+
+	</div>
+
+
+</footer>
+
+
+
+</body>
+
+</html>
