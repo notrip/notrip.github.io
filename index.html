@@ -308,7 +308,7 @@
 <li><p><strong>增加分区</strong></p>
 <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">./kafka-topics.sh --alter --topic tpc_2 --partitions 3 --zookeeper node1:2181</span><br></pre></td></tr></table></figure>
 
-<p><figure class="figure"><img src="/2022/06/11/Kafka%E5%91%BD%E4%BB%A4%E8%A1%8C%E6%93%8D%E4%BD%9C/%E5%9B%BE%E7%89%875.png" alt="图片5.png"><figcaption class="figure__caption">图片5.png</figcaption></figure></p>
+<p>![图片5.png](./Kafka order/图片5.png)</p>
 </li>
 </ul>
 <h4 id="2-创建新的topic"><a href="#2-创建新的topic" class="headerlink" title="2.创建新的topic"></a>2.创建新的topic</h4><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">./kafka-topics.sh --zookeeper --create --replication-factor 3 --partitions 3 --topic tpc_11 node1:2181,node2:2181,node3:2181</span><br></pre></td></tr></table></figure>
@@ -349,7 +349,7 @@
 <li><p>消费者</p>
 <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">./kafka-console-consumer.sh --bootstrap-server node1:9092, node2:9092, node3:9092 --topic tpc_11 --from-beginning</span><br></pre></td></tr></table></figure>
 
-<p><figure class="figure"><img src="/2022/06/11/Kafka%E5%91%BD%E4%BB%A4%E8%A1%8C%E6%93%8D%E4%BD%9C/%E5%9B%BE%E7%89%877.png" alt="图片7.png"><figcaption class="figure__caption">图片7.png</figcaption></figure></p>
+<p><figure class="figure"><img src="/2022/06/11/Kafka%E5%91%BD%E4%BB%A4%E8%A1%8C%E6%93%8D%E4%BD%9C/%E5%9B%BE%E7%89%877.png"></figure></p>
 </li>
 </ul>
 </li>
