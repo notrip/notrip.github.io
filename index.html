@@ -59,9 +59,9 @@
 
 <p>⚠️：1.在启动Eagle服务需将zookeeper和kafka全部启动</p>
 <p>​         2.修改Kafka-server-start.sh脚本，开启kafka JMX，否则出现问题</p>
-<p><figure class="figure"><img src="/2022/06/14/kafka-eagle%E9%83%A8%E7%BD%B2/1.png"></figure></p>
-<p><figure class="figure"><img src="/2022/06/14/kafka-eagle%E9%83%A8%E7%BD%B2/2.png"></figure></p>
-<p><figure class="figure"><img src="/2022/06/14/kafka-eagle%E9%83%A8%E7%BD%B2/3.png"></figure></p>
+<p><figure class="figure"><img src="/2022/06/14/kafka-eagle%E9%83%A8%E7%BD%B2/1.png" alt="1.png"><figcaption class="figure__caption">1.png</figcaption></figure></p>
+<p><figure class="figure"><img src="/2022/06/14/kafka-eagle%E9%83%A8%E7%BD%B2/2.png" alt="2.png"><figcaption class="figure__caption">2.png</figcaption></figure></p>
+<p><figure class="figure"><img src="/2022/06/14/kafka-eagle%E9%83%A8%E7%BD%B2/3.png" alt="3.png"><figcaption class="figure__caption">3.png</figcaption></figure></p>
 
 	
 
@@ -298,17 +298,17 @@
 <h4 id="1"><a href="#1" class="headerlink" title="1."></a>1.</h4><ul>
 <li><strong>查看所有topic</strong></li>
 </ul>
-<p><figure class="figure"><img src="/2022/06/11/Kafka%E5%91%BD%E4%BB%A4%E8%A1%8C%E6%93%8D%E4%BD%9C/%E5%9B%BE%E7%89%871.png" alt="markdown"><figcaption class="figure__caption">markdown</figcaption></figure></p>
+<p><figure class="figure"><img src="/2022/06/11/Kafka%E5%91%BD%E4%BB%A4%E8%A1%8C%E6%93%8D%E4%BD%9C/%E5%9B%BE%E7%89%871.png" alt="图片1.png"><figcaption class="figure__caption">图片1.png</figcaption></figure></p>
 <ul>
 <li><p><strong>查看所有topic详细内容</strong></p>
 <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">./kafka-topics.sh --zookeeper --create node1:2181 --describe</span><br></pre></td></tr></table></figure>
 
-<p><figure class="figure"><img src="/2022/06/11/Kafka%E5%91%BD%E4%BB%A4%E8%A1%8C%E6%93%8D%E4%BD%9C/%E5%9B%BE%E7%89%873.png" alt="markdown"><figcaption class="figure__caption">markdown</figcaption></figure></p>
+<p><figure class="figure"><img src="/2022/06/11/Kafka%E5%91%BD%E4%BB%A4%E8%A1%8C%E6%93%8D%E4%BD%9C/%E5%9B%BE%E7%89%873.png" alt="图片3.png"><figcaption class="figure__caption">图片3.png</figcaption></figure></p>
 </li>
 <li><p><strong>增加分区</strong></p>
 <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">./kafka-topics.sh --alter --topic tpc_2 --partitions 3 --zookeeper node1:2181</span><br></pre></td></tr></table></figure>
 
-<p><figure class="figure"><img src="/2022/06/11/Kafka%E5%91%BD%E4%BB%A4%E8%A1%8C%E6%93%8D%E4%BD%9C/%E5%9B%BE%E7%89%875.png" alt="markdown"><figcaption class="figure__caption">markdown</figcaption></figure></p>
+<p><figure class="figure"><img src="/2022/06/11/Kafka%E5%91%BD%E4%BB%A4%E8%A1%8C%E6%93%8D%E4%BD%9C/%E5%9B%BE%E7%89%875.png" alt="图片5.png"><figcaption class="figure__caption">图片5.png</figcaption></figure></p>
 </li>
 </ul>
 <h4 id="2-创建新的topic"><a href="#2-创建新的topic" class="headerlink" title="2.创建新的topic"></a>2.创建新的topic</h4><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">./kafka-topics.sh --zookeeper --create --replication-factor 3 --partitions 3 --topic tpc_11 node1:2181,node2:2181,node3:2181</span><br></pre></td></tr></table></figure>
@@ -317,7 +317,7 @@
 <p>指令中的含义：</p>
 <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">--replication-factor 副本数量</span><br><span class="line">--partitions 分区数量</span><br><span class="line">--topic topic 名称</span><br></pre></td></tr></table></figure>
 </blockquote>
-<p><figure class="figure"><img src="/2022/06/11/Kafka%E5%91%BD%E4%BB%A4%E8%A1%8C%E6%93%8D%E4%BD%9C/%E5%9B%BE%E7%89%872.png"></figure></p>
+<p><figure class="figure"><img src="/2022/06/11/Kafka%E5%91%BD%E4%BB%A4%E8%A1%8C%E6%93%8D%E4%BD%9C/%E5%9B%BE%E7%89%872.png" alt="图片2.png"><figcaption class="figure__caption">图片2.png</figcaption></figure></p>
 <h4 id="2-删除topic"><a href="#2-删除topic" class="headerlink" title="2.删除topic"></a>2.删除topic</h4><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">./kafka-topics.sh  --delete --topic tpc_11 --zookeeper node1：2181</span><br></pre></td></tr></table></figure>
 
 <hr>
@@ -326,13 +326,13 @@
 </ul>
 <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">./kafka-configs.sh zookeeper node1: 2181 --describe --entity-type topics --entity-name tpc_2</span><br></pre></td></tr></table></figure>
 
-<p><figure class="figure"><img src="/2022/06/11/Kafka%E5%91%BD%E4%BB%A4%E8%A1%8C%E6%93%8D%E4%BD%9C/mojiyang/blog/source/_posts/Kafka%E5%91%BD%E4%BB%A4%E8%A1%8C%E6%93%8D%E4%BD%9C/6.png"></figure></p>
+<p><figure class="figure"><img src="/2022/06/11/Kafka%E5%91%BD%E4%BB%A4%E8%A1%8C%E6%93%8D%E4%BD%9C/6.png" alt="6.png"><figcaption class="figure__caption">6.png</figcaption></figure></p>
 <ul>
 <li></li>
 </ul>
 <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">./kafka-configs.sh zookeeper node1: 2181 --describe --entity-type brokers --entity-name 0 --zookeeper node1:2181</span><br></pre></td></tr></table></figure>
 
-<p><figure class="figure"><img src="/2022/06/11/Kafka%E5%91%BD%E4%BB%A4%E8%A1%8C%E6%93%8D%E4%BD%9C/mojiyang/blog/source/_posts/Kafka%E5%91%BD%E4%BB%A4%E8%A1%8C%E6%93%8D%E4%BD%9C/7.png"></figure></p>
+<p><figure class="figure"><img src="/2022/06/11/Kafka%E5%91%BD%E4%BB%A4%E8%A1%8C%E6%93%8D%E4%BD%9C/7.png" alt="7.png"><figcaption class="figure__caption">7.png</figcaption></figure></p>
 <hr>
 <h3 id="3-生产者与消费者操作"><a href="#3-生产者与消费者操作" class="headerlink" title="(3)生产者与消费者操作"></a>(3)生产者与消费者操作</h3><p>​            **生产者:kafka-console-producer **</p>
 <p>​            <em><strong>消费者:kafka-console-consumer</strong></em></p>
@@ -344,12 +344,12 @@
 
 
 
-<p><figure class="figure"><img src="/2022/06/11/Kafka%E5%91%BD%E4%BB%A4%E8%A1%8C%E6%93%8D%E4%BD%9C/%E5%9B%BE%E7%89%876.png"></figure></p>
+<p><figure class="figure"><img src="/2022/06/11/Kafka%E5%91%BD%E4%BB%A4%E8%A1%8C%E6%93%8D%E4%BD%9C/%E5%9B%BE%E7%89%876.png" alt="图片6.png"><figcaption class="figure__caption">图片6.png</figcaption></figure></p>
 </li>
 <li><p>消费者</p>
 <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">./kafka-console-consumer.sh --bootstrap-server node1:9092, node2:9092, node3:9092 --topic tpc_11 --from-beginning</span><br></pre></td></tr></table></figure>
 
-<p><figure class="figure"><img src="/2022/06/11/Kafka%E5%91%BD%E4%BB%A4%E8%A1%8C%E6%93%8D%E4%BD%9C/%E5%9B%BE%E7%89%877.png"></figure></p>
+<p><figure class="figure"><img src="/2022/06/11/Kafka%E5%91%BD%E4%BB%A4%E8%A1%8C%E6%93%8D%E4%BD%9C/%E5%9B%BE%E7%89%877.png" alt="图片7.png"><figcaption class="figure__caption">图片7.png</figcaption></figure></p>
 </li>
 </ul>
 </li>
