@@ -35,6 +35,43 @@
 
 	<article>
 	
+		<h1><a href="/2022/06/22/kafka-eagle-功能介绍/">kafka-eagle 功能介绍</a></h1>
+	
+	<div class="article__infos">
+		<span class="article__date">2022-06-22</span><br />
+		
+		
+	</div>
+
+	
+
+	
+		<h5 id="博主的本地环境为：Macbok-pro-macOS-Monterey-12-3-1"><a href="#博主的本地环境为：Macbok-pro-macOS-Monterey-12-3-1" class="headerlink" title="博主的本地环境为：Macbok pro , macOS Monterey 12.3.1"></a><em>博主的本地环境为：Macbok pro , macOS Monterey 12.3.1</em></h5><hr>
+<h4 id="1-导航栏"><a href="#1-导航栏" class="headerlink" title="1.导航栏"></a>1.导航栏</h4><p><figure class="figure"><img src="/2022/06/22/kafka-eagle-%E5%8A%9F%E8%83%BD%E4%BB%8B%E7%BB%8D/1.png"></figure></p>
+<p><figure class="figure"><img src="/2022/06/22/kafka-eagle-%E5%8A%9F%E8%83%BD%E4%BB%8B%E7%BB%8D/2.png"></figure></p>
+<p><figure class="figure"><img src="/2022/06/22/kafka-eagle-%E5%8A%9F%E8%83%BD%E4%BB%8B%E7%BB%8D/3.png"></figure></p>
+<p><figure class="figure"><img src="/2022/06/22/kafka-eagle-%E5%8A%9F%E8%83%BD%E4%BB%8B%E7%BB%8D/4.png"></figure></p>
+<p><figure class="figure"><img src="/2022/06/22/kafka-eagle-%E5%8A%9F%E8%83%BD%E4%BB%8B%E7%BB%8D/5.png"></figure></p>
+<h4 id="2-中间栏"><a href="#2-中间栏" class="headerlink" title="2.中间栏"></a>2.中间栏</h4><p><figure class="figure"><img src="/2022/06/22/kafka-eagle-%E5%8A%9F%E8%83%BD%E4%BB%8B%E7%BB%8D/6.png"></figure></p>
+<p><figure class="figure"><img src="/2022/06/22/kafka-eagle-%E5%8A%9F%E8%83%BD%E4%BB%8B%E7%BB%8D/7.png"></figure></p>
+<h4 id="3-创建主题"><a href="#3-创建主题" class="headerlink" title="3.创建主题"></a>3.创建主题</h4><p><figure class="figure"><img src="/2022/06/22/kafka-eagle-%E5%8A%9F%E8%83%BD%E4%BB%8B%E7%BB%8D/8.png"></figure></p>
+<h4 id="4-支持SQL查询界面"><a href="#4-支持SQL查询界面" class="headerlink" title="4.支持SQL查询界面"></a>4.支持SQL查询界面</h4><p><figure class="figure"><img src="/2022/06/22/kafka-eagle-%E5%8A%9F%E8%83%BD%E4%BB%8B%E7%BB%8D/9.png"></figure></p>
+<h4 id="5-向主题发送数据"><a href="#5-向主题发送数据" class="headerlink" title="5.向主题发送数据"></a>5.向主题发送数据</h4><p><figure class="figure"><img src="/2022/06/22/kafka-eagle-%E5%8A%9F%E8%83%BD%E4%BB%8B%E7%BB%8D/10.png"></figure></p>
+<h4 id="6-查看消费者信息"><a href="#6-查看消费者信息" class="headerlink" title="6.查看消费者信息"></a>6.查看消费者信息</h4><p><figure class="figure"><img src="/2022/06/22/kafka-eagle-%E5%8A%9F%E8%83%BD%E4%BB%8B%E7%BB%8D/11.png"></figure></p>
+<h4 id="7-实时监控"><a href="#7-实时监控" class="headerlink" title="7.实时监控"></a>7.实时监控</h4><p><figure class="figure"><img src="/2022/06/22/kafka-eagle-%E5%8A%9F%E8%83%BD%E4%BB%8B%E7%BB%8D/12.png"></figure></p>
+<p><figure class="figure"><img src="/2022/06/22/kafka-eagle-%E5%8A%9F%E8%83%BD%E4%BB%8B%E7%BB%8D/13.png"></figure></p>
+
+	
+
+	
+
+</article>
+
+
+
+
+	<article>
+	
 		<h1><a href="/2022/06/14/kafka-eagle/">kafka-eagle部署</a></h1>
 	
 	<div class="article__infos">
@@ -308,7 +345,7 @@
 <li><p><strong>增加分区</strong></p>
 <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">./kafka-topics.sh --alter --topic tpc_2 --partitions 3 --zookeeper node1:2181</span><br></pre></td></tr></table></figure>
 
-<p>![图片5.png](./Kafka order/图片5.png)</p>
+<p><figure class="figure"><img src="/2022/06/11/Kafka%E5%91%BD%E4%BB%A4%E8%A1%8C%E6%93%8D%E4%BD%9C/%E5%9B%BE%E7%89%875.png" alt="图片5.png"><figcaption class="figure__caption">图片5.png</figcaption></figure></p>
 </li>
 </ul>
 <h4 id="2-创建新的topic"><a href="#2-创建新的topic" class="headerlink" title="2.创建新的topic"></a>2.创建新的topic</h4><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">./kafka-topics.sh --zookeeper --create --replication-factor 3 --partitions 3 --topic tpc_11 node1:2181,node2:2181,node3:2181</span><br></pre></td></tr></table></figure>
