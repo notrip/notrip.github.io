@@ -35,6 +35,45 @@
 
 	<article>
 	
+		<h1><a href="/2022/06/14/kafka-eagle部署/">kafka-eagle部署</a></h1>
+	
+	<div class="article__infos">
+		<span class="article__date">2022-06-14</span><br />
+		
+		
+	</div>
+
+	
+
+	
+		<p><em>博主的本地环境为：Macbok pro , macOS Monterey 12.3.1</em></p>
+<hr>
+<h4 id="1-下载kafka-eagle-bin-2-1-gz压缩包"><a href="#1-下载kafka-eagle-bin-2-1-gz压缩包" class="headerlink" title="1.下载kafka-eagle-bin-2.1..gz压缩包"></a>1.下载kafka-eagle-bin-2.1..gz压缩包</h4><h4 id="2-上传并解压"><a href="#2-上传并解压" class="headerlink" title="2.上传并解压"></a>2.上传并解压</h4><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">tar -zxvf /export/server/kafka-eagle-bin-2.1..gz</span><br><span class="line">cd /export/server</span><br><span class="line">ln -s kafka-eagle-bin-2.1.0 kafka-eagle</span><br><span class="line">cd kafka-eagle</span><br><span class="line">tar -zxvf kafka-eagle-web-2.0.2-bin.tar.gz</span><br></pre></td></tr></table></figure>
+
+<h4 id="3-配置全局环境变量-KE-HOME"><a href="#3-配置全局环境变量-KE-HOME" class="headerlink" title="3.配置全局环境变量:KE_HOME"></a>3.配置全局环境变量:KE_HOME</h4><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">vi /etc/profile </span><br><span class="line"></span><br><span class="line">export KE_HOME=/export/server/kafka-eagle</span><br><span class="line">export PATH=$PATH:$KE_HOME/bin</span><br></pre></td></tr></table></figure>
+
+<h4 id="4-配置KafkaEagle"><a href="#4-配置KafkaEagle" class="headerlink" title="4.配置KafkaEagle"></a>4.配置KafkaEagle</h4><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">cd /export/server/kafka-eagle/conf </span><br><span class="line">vi system-.properties</span><br><span class="line"></span><br><span class="line">kafka.eagle.zk.cluster.alias=cluster1</span><br><span class="line">cluster1.zk.list=node1:2181,node2:2181,node3:2181</span><br><span class="line">cluster2.zk.list=xdn10:2181,xdn11:2181,xdn12:2181</span><br><span class="line">kafka.eagle.url=jdbc:sqlite:/export/data/db/ke.db    </span><br></pre></td></tr></table></figure>
+
+<p>⚠️：此步骤需要 在/exprot/server/data中创建db文件夹——mkdir db</p>
+<h4 id="5-启动Eagle服务"><a href="#5-启动Eagle服务" class="headerlink" title="5.启动Eagle服务"></a>5.启动Eagle服务</h4><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">cd /export/server/kafka/bin </span><br><span class="line">vi kafka-server-start.sh</span><br><span class="line"></span><br><span class="line">if [ &quot;x$KAFKA_HEAP_OPTS&quot; = &quot;x&quot; ]; then</span><br><span class="line">    export KAFKA_HEAP_OPTS=&quot;-server -Xms2G -Xmx2G -XX:PermSize=128m -XX:+UseG1GC -XX:MaxGCPauseMillis=200 -XX:ParallelGCThreads=8 -XX:ConcGCThreads=5 -XX:InitiatingHeapOccupancyPercent=70&quot;</span><br><span class="line">    export JMX_PORT=&quot;9999&quot;</span><br><span class="line">fi</span><br><span class="line"></span><br><span class="line">cd /export/server/kafka-eagle/bin</span><br><span class="line">./ke.sh start</span><br></pre></td></tr></table></figure>
+
+<p>⚠️：1.在启动Eagle服务需将zookeeper和kafka全部启动</p>
+<p>​         2.修改Kafka-server-start.sh脚本，开启kafka JMX，否则出现问题</p>
+<p><figure class="figure"><img src="/2022/06/14/kafka-eagle%E9%83%A8%E7%BD%B2/mojiyang/blog/source/_posts/kafka-eagle%E9%83%A8%E7%BD%B2/1.png"></figure></p>
+<p><figure class="figure"><img src="/2022/06/14/kafka-eagle%E9%83%A8%E7%BD%B2/mojiyang/blog/source/_posts/kafka-eagle%E9%83%A8%E7%BD%B2/2.png"></figure></p>
+<p><figure class="figure"><img src="/2022/06/14/kafka-eagle%E9%83%A8%E7%BD%B2/mojiyang/blog/source/_posts/kafka-eagle%E9%83%A8%E7%BD%B2/3.png"></figure></p>
+
+	
+
+	
+
+</article>
+
+
+
+
+	<article>
+	
 		<h1><a href="/2022/06/11/kafka-API使用方法/">kafka API使用方法</a></h1>
 	
 	<div class="article__infos">
